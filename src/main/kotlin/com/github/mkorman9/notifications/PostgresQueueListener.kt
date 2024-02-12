@@ -64,7 +64,12 @@ class PostgresQueueListener(
             }
 
             for (notification in notifications) {
-                val queue = PostgresQueue.valueOf(notification.name.uppercase())
+                val queue = PostgresQueue.findByQueueName(notification.name)
+                if (queue == null) {
+                    log.warn("Notification for queue ${notification.name} could not be routed")
+                    continue
+                }
+
                 val payload = try {
                     objectMapper.readValue(notification.parameter, queue.payloadClass.java)
                 } catch (e: JacksonException) {
@@ -72,7 +77,7 @@ class PostgresQueueListener(
                     continue
                 }
 
-                eventBus.send(queue.eventBusAddress, payload)
+                eventBus.send(queue.name, payload)
             }
         }
     }
@@ -111,7 +116,7 @@ class PostgresQueueListener(
 
     private fun subscribeToQueues(connection: Connection) {
         connection.createStatement().use { statement ->
-            for (queue in PostgresQueue.entries) {
+            for (queue in PostgresQueue.entries()) {
                 statement.execute("LISTEN ${queue.name}")
             }
         }

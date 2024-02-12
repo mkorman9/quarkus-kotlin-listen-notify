@@ -3,9 +3,20 @@ package com.github.mkorman9.notifications
 import com.github.mkorman9.SampleEvent
 import kotlin.reflect.KClass
 
-enum class PostgresQueue(
-    val eventBusAddress: String,
-    val payloadClass: KClass<out Any>
+sealed class PostgresQueue<T : Any>(
+    val name: String,
+    val payloadClass: KClass<T>
 ) {
-    SAMPLE_EVENTS(SampleEvent.EVENTBUS_ADDRESS, SampleEvent::class)
+    data object SampleEvents : PostgresQueue<SampleEvent>(SampleEvent.QUEUE_NAME, SampleEvent::class)
+
+    companion object {
+        fun entries(): List<PostgresQueue<*>> {
+            return PostgresQueue::class.sealedSubclasses
+                .mapNotNull { it.objectInstance }
+        }
+
+        fun findByQueueName(queueName: String): PostgresQueue<*>? {
+            return entries().find { queue -> queue.name == queueName }
+        }
+    }
 }

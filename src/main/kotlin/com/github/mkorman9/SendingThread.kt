@@ -35,7 +35,7 @@ class SendingThread(
             Thread.sleep(INTERVAL)
 
             try {
-                sender.send(PostgresQueue.SAMPLE_EVENTS, SampleEvent("Hello world!"))
+                sender.send(PostgresQueue.SampleEvents, SampleEvent("Hello world!"))
             } catch (e: SQLException) {
                 // ignore
             }

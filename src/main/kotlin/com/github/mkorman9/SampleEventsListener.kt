@@ -5,7 +5,7 @@ import jakarta.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class SampleEventsListener {
-    @ConsumeEvent(SampleEvent.EVENTBUS_ADDRESS)
+    @ConsumeEvent(SampleEvent.QUEUE_NAME)
     fun onEvent(event: SampleEvent) {
         println("Sample event: ${event.payload}")
     }

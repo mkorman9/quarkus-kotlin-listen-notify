@@ -10,7 +10,7 @@ class PostgresQueueSender(
     private val dataSource: DataSource,
     private val objectMapper: ObjectMapper
 ) {
-    fun send(queue: PostgresQueue, payload: Any) {
+    fun <T : Any> send(queue: PostgresQueue<T>, payload: T) {
         val payloadSerialized = objectMapper.writeValueAsString(payload)
         dataSource.connection.use { connection ->
             connection.createStatement().use { statement ->
