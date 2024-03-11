@@ -14,7 +14,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <kotlin.version>1.9.22</kotlin.version>
-        <quarkus.version>3.7.2</quarkus.version>
+        <quarkus.version>3.8.2</quarkus.version>
     </properties>
 
     <dependencyManagement>
@@ -86,6 +86,10 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <args>
+                        <arg>-java-parameters</arg>
+                    </args>
+
                     <compilerPlugins>
                         <plugin>all-open</plugin>
                     </compilerPlugins>
